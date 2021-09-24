@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: posts-service-depl
+spec:
+  replicas: 1 # number of pods to run for each image
+  selector: # the selector will look for all pods that were created and match the label with app label - posts-service
+    matchLabels:
+      app: posts-service
+  template: # the template we specify the configuration to the deployment that we are going to make
+    metadata:
+      labels:
+        app: posts-service
+    spec:
+      containers:
+        - name: posts-service
+          image: yazanalmatar99/posts-service:latest # latest refers to the latest version
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: posts-clusterip-srv
+spec:
+  selector:
+    app: posts-service
+  # type: ClusterIP
+  ports:
+    - name: posts-service
+      protocol: TCP
+      port: 4000
+      targetPort: 4000

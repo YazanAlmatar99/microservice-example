@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: query-service-depl
+spec:
+  replicas: 1 # number of pods to run for each image
+  selector: # the selector will look for all pods that were created and match the label with app label - event-bus
+    matchLabels:
+      app: query-service
+  template: # the template we specify the configuration to the deployment that we are going to make
+    metadata:
+      labels:
+        app: query-service
+    spec:
+      containers:
+        - name: query-service
+          image: yazanalmatar99/query-service:latest # latest refers to the latest version
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: query-srv
+spec:
+  selector:
+    app: query-service
+  # type: ClusterIP
+  ports:
+    - name: query-service
+      protocol: TCP
+      port: 4002
+      targetPort: 4002
